@@ -1,0 +1,21 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  run:
+    cmds:
+    
+    silent: true
+
+  tests:
+    cmds:
+      - python -m pytest -v
+    silent: true
+
+  check:
+    cmds:
+      - python -m isort src/
+      - python -m black src/
+      - python -m mypy src/ --explicit-package-bases 
+    silent: true
