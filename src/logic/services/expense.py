@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date
 from decimal import Decimal
 
 from src.domain.entities.expense import Expense
@@ -15,7 +15,7 @@ class ExpenseService:
         user_id: int,
         amount: Decimal,
         category: str,
-        date: datetime | None = None,
+        date: date | None = None,
         description: str | None = None,
     ) -> Expense:
         expense = Expense(
