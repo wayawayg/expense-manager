@@ -65,33 +65,3 @@ class Expense(BaseEntity):
             raise FutureDateException
 
         return value
-
-    def __str__(self) -> str:
-        return "[Expense] ID: %s | User: %d | Amount: %s | Category: %s | Date: %s | Desc: %s" % (
-            self.id,
-            self.user_id,
-            self.amount,
-            self.category,
-            self.date.strftime("%Y-%m-%d %H:%M") if self.date else "N/A",
-            self.description or "N/A"
-        )
-    
-    def __repr__(self) -> str:
-        return (
-                "Expense("
-                "id=%r, "
-                "created_at=%r, "
-                "user_id=%r, "
-                "amount=%r, "
-                "category=%r, "
-                "description=%r, "
-                "date=%r)"
-            ) % (
-                self.id,
-                self.created_at,
-                self.user_id,
-                self.amount,
-                self.category,
-                self.description,
-                self.date
-            )
