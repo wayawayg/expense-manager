@@ -1,7 +1,6 @@
-import re
 import datetime
+import re
 from decimal import Decimal
-from uuid import uuid4
 
 from pydantic import Field, field_validator
 
@@ -20,9 +19,7 @@ class Expense(BaseEntity):
     amount: Decimal
     category: str
     description: str | None = None
-    date: datetime.date | None = Field(
-        default_factory=datetime.date.today
-    )
+    date: datetime.date | None = Field(default_factory=datetime.date.today)
 
     @field_validator("amount", mode="after")
     @classmethod
