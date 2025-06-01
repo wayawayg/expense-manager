@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, timedelta
+import datetime
 from decimal import Decimal
 from uuid import uuid4
 
@@ -15,7 +15,7 @@ from src.domain.exceptions.expense import (
 
 
 def test_create_expense_with_too_long_amount_accuracy() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     with pytest.raises(AmountAccuracyTooLongException) as ex:
         expense = Expense(
@@ -30,7 +30,7 @@ def test_create_expense_with_too_long_amount_accuracy() -> None:
 
 
 def test_create_expense_with_negative_amount() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     with pytest.raises(NotPositiveAmountException) as ex:
         expense = Expense(
@@ -45,7 +45,7 @@ def test_create_expense_with_negative_amount() -> None:
 
 
 def test_create_expense_with_zero_amount() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     with pytest.raises(NotPositiveAmountException) as ex:
         expense = Expense(
@@ -60,7 +60,7 @@ def test_create_expense_with_zero_amount() -> None:
 
 
 def test_create_expense_with_too_long_accuracy_negative_amount() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     with pytest.raises(NotPositiveAmountException) as ex:
         expense = Expense(
@@ -75,7 +75,7 @@ def test_create_expense_with_too_long_accuracy_negative_amount() -> None:
 
 
 def test_create_expense_with_too_long_category() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     with pytest.raises(CategoryTextTooLongException) as ex:
         expense = Expense(
@@ -90,7 +90,7 @@ def test_create_expense_with_too_long_category() -> None:
 
 
 def test_create_expense_with_too_long_description() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     with pytest.raises(DescriptionTextTooLongException) as ex:
         expense = Expense(
@@ -105,7 +105,7 @@ def test_create_expense_with_too_long_description() -> None:
 
 
 def test_create_expense_with_none_description() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     expense = Expense(
         user_id=111,
@@ -125,7 +125,7 @@ def test_create_expense_with_none_description() -> None:
 
 
 def test_create_expense_without_description() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     expense = Expense(
         user_id=111,
@@ -144,7 +144,7 @@ def test_create_expense_without_description() -> None:
 
 
 def test_create_expense_with_future_date() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     with pytest.raises(FutureDateException) as ex:
         expense = Expense(
@@ -152,7 +152,7 @@ def test_create_expense_with_future_date() -> None:
             amount=Decimal("12.34"),
             category="Some category",
             description="Some description",
-            date=current_date + timedelta(seconds=30),
+            date=current_date + datetime.timedelta(days=12),
         )
 
     ex.value.message == "This is a date that has not yet occurred"
@@ -194,7 +194,7 @@ def test_create_expense_without_date() -> None:
 
 
 def test_create_expense_success() -> None:
-    current_date = datetime.now(UTC)
+    current_date = datetime.date.today()
 
     # Average values
     expense = Expense(

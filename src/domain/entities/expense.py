@@ -1,5 +1,5 @@
 import re
-from datetime import UTC, datetime
+import datetime
 from decimal import Decimal
 from uuid import uuid4
 
@@ -20,8 +20,8 @@ class Expense(BaseEntity):
     amount: Decimal
     category: str
     description: str | None = None
-    date: datetime | None = Field(
-        default_factory=lambda: datetime.now(UTC),
+    date: datetime.date | None = Field(
+        default_factory=datetime.date.today
     )
 
     @field_validator("amount", mode="after")
@@ -56,11 +56,12 @@ class Expense(BaseEntity):
 
     @field_validator("date", mode="after")
     @classmethod
-    def validate_date(cls, value: datetime | None) -> datetime:
+    def validate_date(cls, value: datetime.date | None) -> datetime.date:
         if not value:
-            return datetime.now(UTC)
+            return datetime.date.today()
 
-        if value > datetime.now(UTC):
+        # TODO check tz date info
+        if value > datetime.date.today():
             raise FutureDateException
 
         return value
