@@ -24,8 +24,12 @@ pytest = "^8.3.5"
 isort = "^6.0.1"
 black = "^25.1.0"
 mypy = "^1.15.0"
+pytest-asyncio = "^1.0.0"
 
 [tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
 python_files = [
     "test_*.py",
     "*_test.py",

@@ -3,14 +3,20 @@
 version: '3'
 
 tasks:
-  run:
+  build:
     cmds:
-    
+      - docker compose --profile dev --env-file .env build
     silent: true
 
+  up:
+    cmds:
+      - docker compose --profile dev --env-file .env up
+    silent: true
+ 
   tests:
     cmds:
-      - python -m pytest -v
+      - docker compose --profile test --env-file tests.env build
+      - docker compose --profile test --env-file tests.env up
     silent: true
 
   check:
@@ -18,4 +24,11 @@ tasks:
       - python -m isort src/
       - python -m black src/
       - python -m mypy src/ --explicit-package-bases 
+    silent: true
+
+  check-tests:
+    cmds:
+      - python -m isort tests/
+      - python -m black tests/
+      - python -m mypy tests/ --explicit-package-bases 
     silent: true

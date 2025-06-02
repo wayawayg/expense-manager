@@ -1,0 +1,66 @@
+services:
+  expense_manager:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: ${PROJECT_CONTAINER_NAME}
+    env_file: ".env"
+    volumes:
+      - ./src/:/src/
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - expense_manager
+    profiles: ["dev"]
+
+  tests:
+    build:
+      context: .
+      dockerfile: ./docker/tests.Dockerfile
+    container_name: ${TEST_CONTAINER_NAME}
+    env_file: "tests.env"
+    volumes:
+      - ./src/:/src/
+      - ./tests/:/tests/
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - expense_manager
+    profiles: ["test"]
+
+  mongodb:
+    image: mongo:latest
+    container_name: ${MONGO_CONTAINER_NAME}
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE_NAME}
+    ports:
+      - '${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}'
+    healthcheck:
+      test: 
+        [
+          "CMD-SHELL",
+          "sh", 
+          "-c", 
+          "mongosh --quiet -u ${MONGO_USERNAME} -p ${MONGO_PASSWORD} --eval 'db.runCommand(\"ping\").ok' | grep '^1$$'"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - expense_manager
+    profiles: ["dev", "test"]
+
+networks:
+  expense_manager:
+    driver: bridge
+
+volumes:
+  mongo-data:
